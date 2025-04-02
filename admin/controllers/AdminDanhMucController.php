@@ -1,13 +1,11 @@
 <?php
-require_once './models/AdminDanhMuc.php';
-
 class AdminDanhMucController
 {
     private $modelDanhMuc;
 
     public function __construct()
     {
-        $this->modelDanhMuc = new AdminDanhMuc;
+        $this->modelDanhMuc = new AdminDanhMuc();
     }
 
     public function danhSachDanhMuc()
@@ -27,11 +25,13 @@ class AdminDanhMucController
             $ten_danh_muc = $_POST['ten_danh_muc'];
             $mo_ta = $_POST['mo_ta'];
 
+            $errors = [];
+
             if (empty($ten_danh_muc)) {
-                $error['ten_danh_muc'] = 'Tên danh mục không được để trống';
+                $errors['ten_danh_muc'] = 'Tên danh mục không được để trống';
             }
 
-            if (empty($error)) {
+            if (empty($errors)) {
                 $this->modelDanhMuc->insertDanhMuc($ten_danh_muc, $mo_ta);
                 header('Location: ' . BASE_URL_ADMIN . '?act=danh-muc');
                 exit;

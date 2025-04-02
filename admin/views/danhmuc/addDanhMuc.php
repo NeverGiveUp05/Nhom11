@@ -36,8 +36,8 @@
                                 <div class="form-group">
                                     <label>Tên danh mục</label>
                                     <input type="text" class="form-control" name="ten_danh_muc" placeholder="Nhập tên danh mục">
-                                    <?php if (isset($error['ten_danh_muc'])) : ?>
-                                        <span class="text-danger"><?= $error['ten_danh_muc'] ?></span>
+                                    <?php if (isset($errors['ten_danh_muc'])) : ?>
+                                        <span class="text-danger"><?= $errors['ten_danh_muc'] ?></span>
                                     <?php endif; ?>
                                 </div>
 
