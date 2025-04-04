@@ -12,6 +12,7 @@ class AdminDonHang
     public function getAllDonHang()
     {
         try {
+            
             $sql = "SELECT don_hangs.*, trang_thai_don_hangs.ten_trang_thai
             FROM don_hangs
             INNER JOIN trang_thai_don_hangs ON don_hangs.trang_thai_id = trang_thai_don_hangs.id";
@@ -80,6 +81,43 @@ class AdminDonHang
             echo "Lỗi: " . $e->getMessage();
         }
     }
+    public function updateDonHang(
+        $ten_nguoi_nhan,
+        $sdt_nguoi_nhan,
+        $email_nguoi_nhan,
+        $dia_chi_nguoi_nhan,
+        $ghi_chu,
+        $id,
+        $trang_thai_id
+    ) {
+        try {
+            var_dump( $ten_nguoi_nhan);die;
+            //var_dump($id);die;
+            $sql = "UPDATE don_hangs
+                    SET 
+                        ten_nguoi_nhan = :ten_nguoi_nhan,
+                        sdt_nguoi_nhan = :sdt_nguoi_nhan,
+                        email_nguoi_nhan = :email_nguoi_nhan,
+                        dia_chi_nguoi_nhan = :dia_chi_nguoi_nhan,
+                        ghi_chu = :ghi_chu,
+                        trang_thai_id = :trang_thai_id
+                    WHERE id = :id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([
+                ':ten_nguoi_nhan' => $ten_nguoi_nhan,
+                ':sdt_nguoi_nhan' => $sdt_nguoi_nhan,
+                ':email_nguoi_nhan' => $email_nguoi_nhan,
+                ':dia_chi_nguoi_nhan' => $dia_chi_nguoi_nhan,
+                ':ghi_chu' => $ghi_chu,
+                ':trang_thai_id' => $trang_thai_id,
+                ':id' => $id,
+            ]);
+            return true;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+
 
 
     // public function insertSanPham(
@@ -153,49 +191,6 @@ class AdminDonHang
     //     }
     // }
 
-    // public function updateSanPham(
-    //     $san_pham_id,
-    //     $ten_san_pham,
-    //     $gia_san_pham,
-    //     $gia_khuyen_mai,
-    //     $so_luong,
-    //     $ngay_nhap,
-    //     $danh_muc_id,
-    //     $trang_thai,
-    //     $mo_ta,
-    //     $hinh_anh
-    // ) {
-    //     try {
-    //         $sql = "UPDATE san_phams
-    //                 SET 
-    //                     ten_san_pham = :ten_san_pham,
-    //                     gia_san_pham = :gia_san_pham,
-    //                     gia_khuyen_mai = :gia_khuyen_mai,
-    //                     so_luong = :so_luong,
-    //                     ngay_nhap = :ngay_nhap,
-    //                     danh_muc_id = :danh_muc_id,
-    //                     trang_thai = :trang_thai,
-    //                     mo_ta = :mo_ta,
-    //                     hinh_anh = :hinh_anh
-    //                 WHERE id = :id";
-    //         $stmt = $this->conn->prepare($sql);
-    //         $stmt->execute([
-    //             ':ten_san_pham' => $ten_san_pham,
-    //             ':gia_san_pham' => $gia_san_pham,
-    //             ':gia_khuyen_mai' => $gia_khuyen_mai,
-    //             ':so_luong' => $so_luong,
-    //             ':ngay_nhap' => $ngay_nhap,
-    //             ':danh_muc_id' => $danh_muc_id,
-    //             ':trang_thai' => $trang_thai,
-    //             ':mo_ta' => $mo_ta,
-    //             ':hinh_anh' => $hinh_anh,
-    //             ':id' => $san_pham_id
-    //         ]);
-    //         return true;
-    //     } catch (PDOException $e) {
-    //         echo "Error: " . $e->getMessage();
-    //     }
-    // }
 
     // public function destroyDanhMuc($id)
     // {
