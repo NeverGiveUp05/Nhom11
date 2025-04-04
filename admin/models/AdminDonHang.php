@@ -12,7 +12,7 @@ class AdminDonHang
     public function getAllDonHang()
     {
         try {
-            
+
             $sql = "SELECT don_hangs.*, trang_thai_don_hangs.ten_trang_thai
             FROM don_hangs
             INNER JOIN trang_thai_don_hangs ON don_hangs.trang_thai_id = trang_thai_don_hangs.id";
@@ -82,17 +82,15 @@ class AdminDonHang
         }
     }
     public function updateDonHang(
+        $don_hang_id,
         $ten_nguoi_nhan,
         $sdt_nguoi_nhan,
         $email_nguoi_nhan,
         $dia_chi_nguoi_nhan,
         $ghi_chu,
-        $id,
-        $trang_thai_id
+        $trang_thai_id,
     ) {
         try {
-            var_dump( $ten_nguoi_nhan);die;
-            //var_dump($id);die;
             $sql = "UPDATE don_hangs
                     SET 
                         ten_nguoi_nhan = :ten_nguoi_nhan,
@@ -110,7 +108,7 @@ class AdminDonHang
                 ':dia_chi_nguoi_nhan' => $dia_chi_nguoi_nhan,
                 ':ghi_chu' => $ghi_chu,
                 ':trang_thai_id' => $trang_thai_id,
-                ':id' => $id,
+                ':id' => $don_hang_id,
             ]);
             return true;
         } catch (PDOException $e) {
