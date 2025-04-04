@@ -53,3 +53,8 @@ function deleteSessionError()
         session_destroy();
     }
 }
+// format date
+function formatDate($date){
+    return date("d-m-Y", strtotime($date));
+}
+
