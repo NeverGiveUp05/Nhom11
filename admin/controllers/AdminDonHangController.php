@@ -7,7 +7,6 @@ class AdminDonHangController
     public function __construct()
     {
         $this->modelDonHang = new AdminDonHang();
-
     }
 
     public function danhSachDonHang()
@@ -18,18 +17,18 @@ class AdminDonHangController
     public function detailDonHang()
     {
         $don_hang_id = $_GET['id_don_hang'];
-    
+
         //Lấy thông tin đơn hàng ở bảng don_hangs
         $donHang = $this->modelDonHang->getDetailDonHang($don_hang_id);
-    
+
         // Lấy danh sách sản phẩm đã đặt của đơn hàng ở bảng chi_tiet_don_hangs
         $sanPhamDonHang = $this->modelDonHang->getListSpDonHang($don_hang_id);
 
         $listTrangThaiDonHang = $this->modelDonHang->getAllTrangThaiDonHang();
-    
+
         require_once './views/donhang/detailDonHang.php';
     }
-    
+
 
     public function formEditDonHang()
     {
@@ -50,7 +49,7 @@ class AdminDonHangController
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $errors = [];
 
-            $don_hang_id = $_POST['id_don_hang'] ?? '';
+            $don_hang_id = $_POST['don_hang_id'] ?? '';
 
             $ten_nguoi_nhan = $_POST['ten_nguoi_nhan'] ?? '';
             $sdt_nguoi_nhan = $_POST['sdt_nguoi_nhan'] ?? '';
@@ -58,12 +57,6 @@ class AdminDonHangController
             $dia_chi_nguoi_nhan = $_POST['dia_chi_nguoi_nhan'] ?? '';
             $ghi_chu = $_POST['ghi_chu'] ?? '';
             $trang_thai_id = $_POST['trang_thai_id'] ?? '';
-            // var_dump( $ten_nguoi_nhan,
-            //         $sdt_nguoi_nhan,
-            //         $email_nguoi_nhan,
-            //         $dia_chi_nguoi_nhan,
-            //         $ghi_chu,
-            //         $trang_thai_id,);die;
 
 
             if (empty($ten_nguoi_nhan)) {
@@ -85,7 +78,7 @@ class AdminDonHangController
             if (empty($trang_thai_id)) {
                 $errors['trang_thai_id'] = 'Trạng thái đơn hàng';
             }
-            
+
 
             $_SESSION['errors'] = $errors;
             // var_dump($errors);die;

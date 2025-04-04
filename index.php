@@ -6,9 +6,12 @@ require_once './commons/function.php'; // Hàm hỗ trợ
 
 // Require toàn bộ file Controllers
 require_once './controllers/HomeController.php';
+require_once './controllers/CartController.php';
 
 // Require toàn bộ file Models
+require_once './models/DanhMuc.php';
 require_once './models/SanPham.php';
+require_once './models/Cart.php';
 
 // Route
 $act = $_GET['act'] ?? '/';
@@ -18,7 +21,11 @@ $act = $_GET['act'] ?? '/';
 match ($act) {
     '/' => (new HomeController())->home(),
 
-    'trangchu' => (new HomeController())->trangChu(),
+    'add-to-cart' => (new CartController())->addToCart(),
+    'get-cart' => (new CartController())->getCart(),
+    'get-product-by-id' => (new CartController())->getProductById(),
+    'reduce-quantity' => (new CartController())->reduceQuantity(),
+    'increase-quantity' => (new CartController())->increaseQuantity(),
 
-    'danh-sach-san-pham' => (new HomeController())->danhSachSanPham(),
+    // 'danh-sach-san-pham' => (new HomeController())->danhSachSanPham(),
 };

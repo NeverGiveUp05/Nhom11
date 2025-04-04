@@ -1,5 +1,6 @@
 <?php
-class SanPham
+
+class DanhMuc
 {
     public $conn;
 
@@ -8,10 +9,10 @@ class SanPham
         $this->conn = connectDB();
     }
 
-    public function getAllSanPham()
+    public function getAllDanhMuc()
     {
         try {
-            $sql = "SELECT * FROM san_phams";
+            $sql = "SELECT * FROM danh_mucs";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -20,24 +21,24 @@ class SanPham
         }
     }
 
-    public function getSanPhamByDanhMuc($danhMucId)
+    public function getFirstDanhMuc()
     {
         try {
-            $sql = "SELECT * FROM san_phams WHERE danh_muc_id = :danh_muc_id LIMIT 5";
+            $sql = "SELECT * FROM danh_mucs LIMIT 1";
             $stmt = $this->conn->prepare($sql);
-            $stmt->execute([':danh_muc_id' => 2]); // test mac dinh la 2 sau sua thanh $danhMucId
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
         }
     }
 
-    public function getSanPhamById($sanPhamId)
+    public function getDetailDanhMuc($id)
     {
         try {
-            $sql = "SELECT * FROM san_phams WHERE id = :id";
+            $sql = "SELECT * FROM danh_mucs WHERE id = :id";
             $stmt = $this->conn->prepare($sql);
-            $stmt->execute([':id' => $sanPhamId]);
+            $stmt->execute([':id' => $id]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
