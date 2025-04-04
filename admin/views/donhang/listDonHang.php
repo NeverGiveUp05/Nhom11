@@ -46,20 +46,20 @@
                 </thead>
                 <tbody>
                 <?php if (!empty($listDonHang) && is_array($listDonHang)): ?>
-    <?php foreach ($listDonHang as $key => $DonHang): ?>
+    <?php foreach ($listDonHang as $key => $donHang): ?>
         <tr>
             <td><?= $key + 1 ?></td>
-            <td><?= $DonHang['ma_don_hang'] ?></td>
-            <td><?= $DonHang['ten_nguoi_nhan'] ?></td>
-            <td><?= $DonHang['sdt_nguoi_nhan'] ?></td>
-            <td><?= $DonHang['ngay_dat'] ?></td>
-            <td><?= $DonHang['tong_tien'] ?></td>
-            <td><?= $DonHang['ten_trang_thai'] ?></td>
+            <td><?= $donHang['ma_don_hang'] ?></td>
+            <td><?= $donHang['ten_nguoi_nhan'] ?></td>
+            <td><?= $donHang['sdt_nguoi_nhan'] ?></td>
+            <td><?= $donHang['ngay_dat'] ?></td>
+            <td><?= $donHang['tong_tien'] ?></td>
+            <td><?= $donHang['ten_trang_thai'] ?></td>
             <td>
-                <a href="<?= BASE_URL_ADMIN . '?act=chi-tiet-don-hang&id_don_hang=' . $DonHang['id'] ?>">
+                <a href="<?= BASE_URL_ADMIN . '?act=chi-tiet-don-hang&id_don_hang=' . $donHang['id'] ?>">
                     <button class="btn btn-primary"><i class='far fa-eye'></i></button>
                 </a>
-                <a href="<?= BASE_URL_ADMIN . '?act=form-sua-don-hang&id_don_hang=' . $DonHang['id'] ?>">
+                <a href="<?= BASE_URL_ADMIN . '?act=form-sua-don-hang&id_don_hang=' . $donHang['id'] ?>">
                     <button class="btn btn-warning"><i class="fas fa-cog"></i></button>
                 </a>
             </td>
