@@ -45,31 +45,31 @@
                   </tr>
                 </thead>
                 <tbody>
-                <?php if (!empty($listDonHang) && is_array($listDonHang)): ?>
-    <?php foreach ($listDonHang as $key => $donHang): ?>
-        <tr>
-            <td><?= $key + 1 ?></td>
-            <td><?= $donHang['ma_don_hang'] ?></td>
-            <td><?= $donHang['ten_nguoi_nhan'] ?></td>
-            <td><?= $donHang['sdt_nguoi_nhan'] ?></td>
-            <td><?= $donHang['ngay_dat'] ?></td>
-            <td><?= $donHang['tong_tien'] ?></td>
-            <td><?= $donHang['ten_trang_thai'] ?></td>
-            <td>
-                <a href="<?= BASE_URL_ADMIN . '?act=chi-tiet-don-hang&id_don_hang=' . $donHang['id'] ?>">
-                    <button class="btn btn-primary"><i class='far fa-eye'></i></button>
-                </a>
-                <a href="<?= BASE_URL_ADMIN . '?act=form-sua-don-hang&id_don_hang=' . $donHang['id'] ?>">
-                    <button class="btn btn-warning"><i class="fas fa-cog"></i></button>
-                </a>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-<?php else: ?>
-    <tr>
-        <td colspan="8" class="text-center">Không có đơn hàng nào</td>
-    </tr>
-<?php endif; ?>
+                  <?php if (!empty($listDonHang) && is_array($listDonHang)): ?>
+                    <?php foreach ($listDonHang as $key => $donHang): ?>
+                      <tr>
+                        <td><?= $key + 1 ?></td>
+                        <td><?= $donHang['ma_don_hang'] ?></td>
+                        <td><?= $donHang['ten_nguoi_nhan'] ?></td>
+                        <td><?= $donHang['sdt_nguoi_nhan'] ?></td>
+                        <td><?= $donHang['ngay_dat'] ?></td>
+                        <td><?= $donHang['tong_tien'] ?></td>
+                        <td><?= $donHang['ten_trang_thai'] ?></td>
+                        <td>
+                          <a href="<?= BASE_URL_ADMIN . '?act=chi-tiet-don-hang&id_don_hang=' . $donHang['id'] ?>">
+                            <button class="btn btn-primary"><i id="togglePassword" class="fas fa-eye" style="cursor: pointer;"></i></button>
+                          </a>
+                          <a href=" <?= BASE_URL_ADMIN . '?act=form-sua-don-hang&id_don_hang=' . $donHang['id'] ?>">
+                            <button class="btn btn-warning"><i class="fas fa-cog fa-spin"></i></button>
+                          </a>
+                        </td>
+                      </tr>
+                    <?php endforeach; ?>
+                  <?php else: ?>
+                    <tr>
+                      <td colspan="8" class="text-center">Không có đơn hàng nào</td>
+                    </tr>
+                  <?php endif; ?>
                 </tbody>
               </table>
             </div>
