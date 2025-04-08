@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 // Require file Common
 require_once './commons/env.php'; // Khai báo biến môi trường
 require_once './commons/function.php'; // Hàm hỗ trợ
@@ -7,11 +7,13 @@ require_once './commons/function.php'; // Hàm hỗ trợ
 // Require toàn bộ file Controllers
 require_once './controllers/HomeController.php';
 require_once './controllers/CartController.php';
+require_once './controllers/UserController.php';
 
 // Require toàn bộ file Models
 require_once './models/DanhMuc.php';
 require_once './models/SanPham.php';
 require_once './models/Cart.php';
+require_once './models/User.php';
 
 // Route
 $act = $_GET['act'] ?? '/';
@@ -26,6 +28,15 @@ match ($act) {
     'get-product-by-id' => (new CartController())->getProductById(),
     'reduce-quantity' => (new CartController())->reduceQuantity(),
     'increase-quantity' => (new CartController())->increaseQuantity(),
+
+    'cart' => (new CartController())->getCartPage(),
+
+    'login' => (new UserController())->login(),
+    'user-login' => (new UserController())->handleLogin(),
+    'logout' => (new UserController())->logout(),
+
+    'checkout' => (new CartController())->checkout(),
+    'handle-checkout' => (new CartController())->handleCheckout(),
 
     // 'danh-sach-san-pham' => (new HomeController())->danhSachSanPham(),
 };

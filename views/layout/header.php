@@ -1,3 +1,4 @@
+</html>
 <div id="form_900px">
     <form action="" class="search-form" id="search-form" method="GET">
         <button><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -246,19 +247,19 @@
                 <div class="item action_pc"><i class="fa-solid fa-headphones"></i></div>
 
                 <?php
-                if (isset($_SESSION['userCurrent'])) { ?>
+                if (isset($_SESSION['user'])) { ?>
                     <div class="item" onClick="openShop()" style="position: relative; margin-right: 30px">
                         <i class="fa-brands fa-shopify"></i><span class="number-cart">0</span>
                     </div>
 
                     <div class="user-account" style="display: flex; align-items: center; gap: 6px;">
-                        <img src="<?php echo $_SESSION['userCurrent']['hinh_anh'] ?>" alt="" style="width: 28px; height: 28px; border-radius: 50%;">
+                        <img src="<?= $_SESSION['user']['anh_dai_dien'] ?>" alt="" style="width: 28px; height: 28px; border-radius: 50%;">
                         <div onclick="logout()" style="cursor: pointer; font-size: 14px; text-wrap: nowrap;" class="name">
-                            Hi, <?php echo $_SESSION['userCurrent']['ten']; ?>
+                            Hi, <?= $_SESSION['user']['name'] ?>
                         </div>
                     </div>
                 <?php    } else { ?>
-                    <a href="?action=login" class="item action_pc"><i class="fa-regular fa-user"></i></a>
+                    <a href="?act=login" class="item action_pc"><i class="fa-regular fa-user"></i></a>
                     <div class="item" onClick="openShop()">
                         <i class="fa-brands fa-shopify"></i><span class="number-cart">0</span>
                     </div>
@@ -281,7 +282,7 @@
                     </div>
                 </div>
             <?php    } else { ?>
-                <a href="?action=login" class="item">
+                <a href="?act=login" class="item">
                     <i class="fa-regular fa-user"></i>
                     <p>Đăng nhập</p>
                 </a>
@@ -301,9 +302,9 @@
     </div>
     <div class="main-shop" id="main-shop"></div>
     <div class="bottom-shop">
-        <div class="total-price">Tổng cộng: <strong id="total">0đ</strong></div>
+        <div class="total-price">Tổng cộng: <strong id="total"></strong></div>
         <div class="box-action">
-            <a href="?action=cart" class="box-title">Xem giỏ hàng</a>
+            <div onclick="checkLoginToViewCart()" class="box-title">Xem giỏ hàng</div>
         </div>
     </div>
     <div class="close-shop" id="close" onClick="closeShop()"><i class="fa-solid fa-xmark"></i></div>
@@ -311,8 +312,25 @@
 
 <script>
     function logout() {
-        localStorage.clear();
+        window.location.href = "<?php echo BASE_URL . '?act=logout'; ?>";
+    }
 
-        window.location.href = "<?php echo BASE_URL . '/?action=logout'; ?>";
+    function checkLoginToViewCart() {
+        <?php if (!isset($_SESSION['user']['id'])) { ?>
+            Swal.fire({
+                icon: 'warning',
+                title: 'Bạn chưa đăng nhập',
+                text: 'Vui lòng đăng nhập để xem giỏ hàng',
+                showCancelButton: true,
+                confirmButtonText: 'Đăng nhập',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '<?= BASE_URL ?>?act=login';
+                }
+            })
+        <?php } else { ?>
+            window.location.href = "<?php echo BASE_URL . '?act=cart'; ?>";
+        <?php } ?>
     }
 </script>

@@ -24,9 +24,4 @@ class HomeController
 
         require_once './views/main/home.php';
     }
-
-    public function trangChu()
-    {
-        echo 'trang chu';
-    }
 }

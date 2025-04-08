@@ -17,9 +17,17 @@ class CartController
         $raw = file_get_contents("php://input");
         $data = json_decode($raw, true);
 
-        $userId = $_SESSION['user']['id'] ?? 1;
+        $userId = $_SESSION['user']['id'] ?? '';
         $sanPhamId = $data['id'];
         $soLuong = $data['soluong'];
+
+        if (!$userId) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Vui lòng đăng nhập để thực hiện chức năng này'
+            ]);
+            exit;
+        }
 
         // Kiểm tra giỏ hàng của user đã tồn tại chưa
         $cartIdExist = $this->modelCart->checkCartExist($userId);
@@ -42,9 +50,8 @@ class CartController
             }
         }
 
-        // Trả về JSON
         echo json_encode([
-            'message' => 'Thêm sản phẩm vào giỏ hàng thành công'
+            'message' => 'Đã thêm sản phẩm vào giỏ hàng',
         ]);
 
         exit;
@@ -54,7 +61,15 @@ class CartController
     {
         header('Content-Type: application/json');
 
-        $userId = $_SESSION['user']['id'] ?? 1;
+        $userId = $_SESSION['user']['id'] ?? '';
+
+        if (!$userId) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Vui lòng đăng nhập'
+            ]);
+            exit;
+        }
 
         // Kiểm tra giỏ hàng của user đã tồn tại chưa
         $cartIdExist = $this->modelCart->checkCartExist($userId);
@@ -64,6 +79,7 @@ class CartController
             echo json_encode($cartDetails);
         } else {
             echo json_encode([
+                'status' => 'error',
                 'message' => 'Giỏ hàng trống'
             ]);
         }
@@ -78,7 +94,7 @@ class CartController
         $sanPhamId = $_GET['id'] ?? null;
 
         if (!$sanPhamId) {
-            echo json_encode(['message' => 'Sản phẩm không tồn tại']);
+            echo json_encode(['status' => 'error', 'message' => 'Sản phẩm không tồn tại']);
             exit;
         }
 
@@ -99,7 +115,7 @@ class CartController
         $soLuongGiam = $data['soLuongGiam'];
 
         if (!$sanPhamId) {
-            echo json_encode(['message' => 'Sản phẩm không tồn tại']);
+            echo json_encode(['status' => 'error', 'message' => 'Sản phẩm không tồn tại']);
             exit;
         }
 
@@ -120,12 +136,140 @@ class CartController
         $soLuongTang = $data['soLuongTang'];
 
         if (!$sanPhamId) {
-            echo json_encode(['message' => 'Sản phẩm không tồn tại']);
+            echo json_encode(['status' => 'error', 'message' => 'Sản phẩm không tồn tại']);
             exit;
         }
 
         $this->modelCart->increaseQuantityProduct($cartId, $sanPhamId, $soLuongTang);
         echo json_encode(['message' => 'Cập nhật thành công']);
         exit;
+    }
+
+    public function getCartPage()
+    {
+        $userId = $_SESSION['user']['id'] ?? '';
+
+        if (!$userId) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Hãy đăng nhập để xem giỏ hàng'
+            ]);
+            exit;
+        }
+
+        // Kiểm tra giỏ hàng của user đã tồn tại chưa
+        $cartIdExist = $this->modelCart->checkCartExist($userId);
+
+        $cartDetails = $this->modelCart->getCartDetails($cartIdExist['id']);
+        $arrSanPham = [];
+        foreach ($cartDetails as $item) {
+            $data = $this->modelSanPham->getSanPhamById($item['san_pham_id']);
+            // data['so_luong] là số lượng sản phẩm trong kho nên cần cập nhật số lượng sản phẩm trong giỏ hàng
+            $data['so_luong'] = $item['so_luong'];
+            $arrSanPham[] = $data;
+        }
+        require_once './views/main/cart.php';
+    }
+
+    public function checkout()
+    {
+        $userId = $_SESSION['user']['id'] ?? '';
+
+        if (!$userId) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Hãy đăng nhập để thực hiện chức năng này'
+            ]);
+            exit;
+        }
+
+        // Kiểm tra giỏ hàng của user đã tồn tại chưa
+        $cartIdExist = $this->modelCart->checkCartExist($userId);
+
+        $cartDetails = $this->modelCart->getCartDetails($cartIdExist['id']);
+        $arrSanPham = [];
+        foreach ($cartDetails as $item) {
+            $data = $this->modelSanPham->getSanPhamById($item['san_pham_id']);
+            // data['so_luong'] là số lượng sản phẩm trong kho nên cần cập nhật số lượng sản phẩm trong giỏ hàng
+            $data['so_luong'] = $item['so_luong'];
+            $arrSanPham[] = $data;
+        }
+
+        $phuongThucThanhToans = $this->modelCart->getPhuongThucThanhToan();
+        require_once './views/main/checkout.php';
+    }
+
+    public function handleCheckout()
+    {
+        $userId = $_SESSION['user']['id'] ?? '';
+
+        if (!$userId) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Hãy đăng nhập để thực hiện chức năng này'
+            ]);
+            exit;
+        }
+
+        $maDonHang = generateOrderCode();
+        $tenNguoiNhan = $_POST['ten_nguoi_nhan'] ?? null;
+        $sdtNguoiNhan = $_POST['sdt_nguoi_nhan'] ?? null;
+        $emailNguoiNhan = $_POST['email_nguoi_nhan'] ?? null;
+        $diaChiNguoiNhan = $_POST['dia_chi_nguoi_nhan'] ?? null;
+        $ngayDat = date('Y-m-d');
+        $phuongThucThanhToanId = $_POST['phuong_thuc_thanh_toan_id'] ?? null;
+        $ghiChu = $_POST['ghi_chu'] ?? null;
+        $trangThaiId = 1;
+
+        // lấy id cart
+        $cartIdExist = $this->modelCart->checkCartExist($userId);
+
+        if ($cartIdExist) {
+            $cartDetails = $this->modelCart->getCartDetails($cartIdExist['id']);
+            $tongTien = 0;
+            foreach ($cartDetails as $item) {
+                $data = $this->modelSanPham->getSanPhamById($item['san_pham_id']);
+
+                // kiểm tra số lượng sản phẩm trong kho có đủ không
+                if ($data['so_luong'] < $item['so_luong']) {
+                    echo 'Sản phẩm ' . $data['ten_san_pham'] . ' không đủ số lượng trong kho';
+                    exit;
+                }
+
+                // data['so_luong'] là số lượng sản phẩm trong kho nên cần cập nhật số lượng sản phẩm trong giỏ hàng
+                $data['so_luong'] = $item['so_luong'];
+
+                if ($data['gia_khuyen_mai']) {
+                    $tongTien += $data['gia_khuyen_mai'] * $item['so_luong'];
+                } else {
+                    $tongTien += $data['gia_san_pham'] * $item['so_luong'];
+                }
+            }
+
+            // thêm đơn hàng vào db
+            $donHangId = $this->modelCart->datHang($maDonHang, $userId, $tenNguoiNhan, $emailNguoiNhan, $sdtNguoiNhan, $diaChiNguoiNhan, $ngayDat, $tongTien, $ghiChu, $phuongThucThanhToanId, $trangThaiId);
+
+            // thêm chi tiết đơn hàng vào db
+            foreach ($cartDetails as $item) {
+                $data = $this->modelSanPham->getSanPhamById($item['san_pham_id']);
+
+                if ($data['gia_khuyen_mai']) {
+                    $donGia = $data['gia_khuyen_mai'];
+                    $thanhTien = $data['gia_khuyen_mai'] * $item['so_luong'];
+                } else {
+                    $donGia = $data['gia_san_pham'];
+                    $thanhTien = $data['gia_san_pham'] * $item['so_luong'];
+                }
+                $this->modelCart->addChiTietDonHang($donHangId, $item['san_pham_id'], $donGia, $item['so_luong'], $thanhTien);
+
+                // cập nhật số lượng sản phẩm trong kho
+                $this->modelSanPham->updateSoLuongSanPham($item['san_pham_id'], $data['so_luong'] - $item['so_luong']);
+            }
+
+            // xóa giỏ hàng sau khi đặt hàng thành công
+            $this->modelCart->clearCart($cartIdExist['id']);
+        }
+
+        require_once './views/main/order.php';
     }
 }

@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('Asia/Ho_Chi_Minh');
 
 // Kết nối CSDL qua PDO
 function connectDB()
@@ -37,10 +38,11 @@ function uploadFile($file, $folderUpload)
     return null;
 }
 
-function deleteFile($file) {
+function deleteFile($file)
+{
     $pathDelete = PATH_ROOT . $file;
 
-    if(file_exists($pathDelete)) {
+    if (file_exists($pathDelete)) {
         unlink($pathDelete);
     }
 }
@@ -54,7 +56,32 @@ function deleteSessionError()
     }
 }
 // format date
-function formatDate($date){
+function formatDate($date)
+{
     return date("d-m-Y", strtotime($date));
 }
 
+function generateOrderCode($prefix = 'STYLMART')
+{
+    $uid = substr(uniqid(), -5);
+    $rand = mt_rand(100, 999);
+    return $prefix . '-' . strtoupper($uid) . $rand;
+}
+
+function routeAdmin($callback)
+{
+    if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
+        echo "Bạn không có quyền truy cập chức năng này.";
+        exit;
+    }
+
+    return $callback();
+}
+
+
+function viewData($data)
+{
+    echo '<pre>';
+    print_r($data);
+    echo '</pre>';
+}

@@ -43,4 +43,15 @@ class SanPham
             echo "Error: " . $e->getMessage();
         }
     }
+
+    public function updateSoLuongSanPham($sanPhamId, $soLuong)
+    {
+        try {
+            $sql = "UPDATE san_phams SET so_luong = :so_luong WHERE id = :id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([':so_luong' => $soLuong, ':id' => $sanPhamId]);
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
 }
