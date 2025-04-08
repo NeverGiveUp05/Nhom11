@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="./public/style.css">
+    <link rel="stylesheet" href="./public/css/style.css">
     <script src="https://kit.fontawesome.com/18ea624bf8.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -77,7 +77,7 @@
                         foreach ($listSanPham as $product) { ?>
                             <div class="box">
                                 <div class="cart">NEW</div>
-                                <a class="img-container" href="<?php echo BASE_URL . '/?action=viewDetail&detail=' . $product['id'] ?>">
+                                <a class="img-container" href="<?php echo BASE_URL . '/?act=viewDetail&detail=' . $product['id'] ?>">
                                     <img class="cart-img" src="<?php echo $product['hinh_anh'] ?>" alt="" />
                                     <!-- <img class="pseudo-img" src="" alt="" /> -->
                                 </a>
@@ -114,7 +114,7 @@
 
                     </div>
                     <div class="show-all">
-                        <a href="<?php echo '?action=category&list=';
+                        <a href="<?php echo '?act=category&list=';
                                     if (isset($_GET['list'])) {
                                         echo $_GET['list'];
                                     } else {
@@ -146,7 +146,6 @@
 
         // Xử lý thêm sản phẩm vào giỏ hàng 
         function addProToCart(data) {
-
             fetch("<?= BASE_URL . '?act=add-to-cart' ?>", {
                     method: "POST",
                     headers: {
@@ -155,8 +154,28 @@
                     body: JSON.stringify(data)
                 })
                 .then(res => res.json())
-                .then(data => {
-                    console.log(data);
+                .then(res => {
+                    if (res.status === 'error') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Bạn chưa đăng nhập',
+                            text: res.message,
+                            showCancelButton: true,
+                            confirmButtonText: 'Đăng nhập',
+                            cancelButtonText: 'Hủy'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '<?= BASE_URL ?>?act=login';
+                            }
+                        });
+                    } else {
+                        getDataCart(); // cập nhật giỏ hàng
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: res.message
+                        });
+                    }
                 })
                 .catch(err => console.error("Lỗi:", err));
         }
@@ -165,6 +184,22 @@
         const listNumberCart = document.getElementsByClassName("number-cart");
         const main = document.getElementById("main-shop");
         const total = document.getElementById("total");
+
+        function countPro() {
+            fetch("<?= BASE_URL . '?act=get-cart' ?>")
+                .then((res) => res.json())
+                .then((data) => {
+                    let count = 0;
+                    data.forEach((item) => {
+                        count += item.so_luong;
+                    });
+                    listNumberCart[0].innerText = count;
+                    listNumberCart[1].innerText = count;
+                })
+                .catch((err) => console.error("Lỗi:", err));
+        };
+
+        countPro();
 
         function openShop() {
             shopping.classList.add("open");
@@ -181,6 +216,16 @@
             if (arrPro.length == 0) {
                 main.innerText = "Bạn chưa có sản phẩm nào";
             }
+
+            countPro();
+
+            // let totalPrice = 0;
+            // arrPro.forEach(({
+            //     item
+            // }) => {
+            //     totalPrice += item.gia_san_pham * item.so_luong;
+            // });
+            // total.innerText = totalPrice;
 
             let fetchPromises = arrPro.map((item) =>
                 fetch("<?= BASE_URL ?>?act=get-product-by-id&id=" + item.san_pham_id)
