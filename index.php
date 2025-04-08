@@ -37,6 +37,8 @@ match ($act) {
 
     'checkout' => (new CartController())->checkout(),
     'handle-checkout' => (new CartController())->handleCheckout(),
+    'order-view' => (new CartController())->getViewOrder(),
+    'handle-huydon' => (new CartController())->handleHuyDon(),
 
     // 'danh-sach-san-pham' => (new HomeController())->danhSachSanPham(),
 };
