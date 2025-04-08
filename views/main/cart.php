@@ -29,7 +29,7 @@
 
                     <div class="cart-list">
                         <h2 class="cart-title">Giỏ hàng của bạn <b><span id="cart-total" class="cart-total">
-                            <!-- cho thanh 1 ham -->
+                                    <!-- cho thanh 1 ham -->
                                     <?php
                                     $tongSoLuong = 0;
                                     foreach ($arrSanPham as $item) {
@@ -130,28 +130,43 @@
                         <div class="cart-summary-info">
                             <p>Tổng sản phẩm</p>
                             <p class="total-product">
-                                ${tongSanPham}
+                                <?php
+                                $tongSoLuong = 0;
+                                foreach ($arrSanPham as $item) {
+                                    $tongSoLuong += $item['so_luong'];
+                                }
+                                echo $tongSoLuong;
+                                ?>
                             </p>
                         </div>
                         <div class="cart-summary-info">
                             <p>Tổng tiền hàng</p>
                             <p class="total-not-discount">
-                                00000
+                                <?php
+                                $tongTienHang = 0;
+                                foreach ($arrSanPham as $item): ?>
+                                    <?php if (isset($item['gia_khuyen_mai'])) {
+                                        $tongTienHang += $item['gia_khuyen_mai'] * $item['so_luong'];
+                                    } else {
+                                        $tongTienHang += $item['gia_san_pham'] * $item['so_luong'];
+                                    }
+                                    ?>
+                                <?php endforeach;
+                                echo $tongTienHang;
+                                ?>
+                            </p>
+                        </div>
+                        <div class="cart-summary-info">
+                            <p>Phí ship</p>
+                            <p class="total-not-discount">
+                                200000
                             </p>
                         </div>
                         <div class="cart-summary-info">
                             <p>Thành tiền</p>
                             <p>
                                 <b class="order-price-total">
-                                    00000
-                                </b>
-                            </p>
-                        </div>
-                        <div class="cart-summary-info">
-                            <p>Tạm tính</p>
-                            <p>
-                                <b class="order-price-total">
-                                    00000
+                                    <?= $tongTienHang + 200000 ?>
                                 </b>
                             </p>
                         </div>
