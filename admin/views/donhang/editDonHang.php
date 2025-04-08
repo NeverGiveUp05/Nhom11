@@ -79,12 +79,12 @@
                                             <option
                                                 <?php
                                                 if (
-                                                    $donHang['trang_thai_id'] > $donHang['id']
+                                                    $donHang['trang_thai_id'] > $trangThai['id']
                                                     || $donHang['trang_thai_id'] == 9
                                                     || $donHang['trang_thai_id'] == 10
                                                     || $donHang['trang_thai_id'] == 11
                                                 ) {
-                                                    echo 'disadled';
+                                                    echo 'disabled';
                                                 }
                                                 ?>
                                                 <?= $trangThai['id'] == $donHang['trang_thai_id'] ? 'selected' : '' ?>
