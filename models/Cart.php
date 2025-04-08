@@ -135,7 +135,8 @@ class Cart
         }
     }
 
-    public function getPhuongThucThanhToan() {
+    public function getPhuongThucThanhToan()
+    {
         try {
             $sql = "SELECT * FROM phuong_thuc_thanh_toans";
             $stmt = $this->conn->prepare($sql);
@@ -146,7 +147,8 @@ class Cart
         }
     }
 
-    public function datHang($maDonHang, $userId, $tenNguoiNhan, $emailNguoiNhan, $sdtNguoiNhan, $diaChiNguoiNhan, $ngayDat, $tongTien, $ghiChu, $phuongThucThanhToanId, $trangThaiId) {
+    public function datHang($maDonHang, $userId, $tenNguoiNhan, $emailNguoiNhan, $sdtNguoiNhan, $diaChiNguoiNhan, $ngayDat, $tongTien, $ghiChu, $phuongThucThanhToanId, $trangThaiId)
+    {
         try {
             $sql = "INSERT INTO don_hangs (ma_don_hang, tai_khoan_id, ten_nguoi_nhan, email_nguoi_nhan, sdt_nguoi_nhan, dia_chi_nguoi_nhan, ngay_dat, tong_tien, ghi_chu, phuong_thuc_thanh_toan_id, trang_thai_id) VALUES (:ma_don_hang, :user_id, :ten_nguoi_nhan, :email_nguoi_nhan, :sdt_nguoi_nhan, :dia_chi_nguoi_nhan, :ngay_dat, :tong_tien, :ghi_chu, :phuong_thuc_thanh_toan_id, :trang_thai_id)";
             $stmt = $this->conn->prepare($sql);
@@ -169,7 +171,8 @@ class Cart
         }
     }
 
-    public function addChiTietDonHang($donHangId, $sanPhamId, $donGia, $soLuong, $thanhTien){
+    public function addChiTietDonHang($donHangId, $sanPhamId, $donGia, $soLuong, $thanhTien)
+    {
         try {
             $sql = "INSERT INTO chi_tiet_don_hangs (don_hang_id, san_pham_id, don_gia, so_luong, thanh_tien) VALUES (:don_hang_id, :san_pham_id, :don_gia, :so_luong, :thanh_tien)";
             $stmt = $this->conn->prepare($sql);
@@ -182,6 +185,45 @@ class Cart
             ]);
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
+        }
+    }
+
+    public function getDonHangByUserId($id)
+    {
+        try {
+            $sql = "
+                SELECT dh.*, tt.ten_trang_thai
+                FROM don_hangs dh
+                JOIN trang_thai_don_hangs tt ON dh.trang_thai_id = tt.id
+                WHERE dh.tai_khoan_id = :user_id
+                ORDER BY dh.id DESC
+            ";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([':user_id' => $id]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+
+    public function huyDonHang($donHangId)
+    {
+        try {
+            // 1. Cập nhật trạng thái đơn hàng
+            $sqlUpdate = "UPDATE don_hangs SET trang_thai_id = 11 WHERE id = :don_hang_id";
+            $stmtUpdate = $this->conn->prepare($sqlUpdate);
+            $stmtUpdate->execute([':don_hang_id' => $donHangId]);
+
+            // 2. Lấy lại thông tin đơn hàng sau khi cập nhật
+            $sqlSelect = "SELECT * FROM don_hangs WHERE id = :don_hang_id";
+            $stmtSelect = $this->conn->prepare($sqlSelect);
+            $stmtSelect->execute([':don_hang_id' => $donHangId]);
+
+            // 3. Trả về dữ liệu đơn hàng (kiểu mảng kết hợp)
+            $donHang = $stmtSelect->fetch(PDO::FETCH_ASSOC);
+            return $donHang;
+        } catch (PDOException $e) {
+            return ['error' => $e->getMessage()];
         }
     }
 }

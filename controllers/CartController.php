@@ -272,4 +272,61 @@ class CartController
 
         require_once './views/main/order.php';
     }
+
+    public function getViewOrder()
+    {
+        $userId = $_SESSION['user']['id'] ?? '';
+
+        if (!$userId) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Hãy đăng nhập để thực hiện chức năng này'
+            ]);
+            exit;
+        }
+
+        $donHang = $this->modelCart->getDonHangByUserId($userId);
+
+        require_once './views/main/order.php';
+    }
+
+    public function handleHuyDon()
+    {
+        header('Content-Type: application/json');
+
+        $raw = file_get_contents("php://input");
+        $data = json_decode($raw, true);
+
+        $userId = $_SESSION['user']['id'] ?? '';
+
+        if (!$userId) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Hãy đăng nhập để thực hiện chức năng này'
+            ]);
+            exit;
+        }
+
+        $donHangId = $data['id'] ?? null;
+        if (!$donHangId) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Đơn hàng không tồn tại'
+            ]);
+            exit;
+        }
+
+        if ($this->modelCart->huyDonHang($donHangId)) {
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Hủy đơn hàng thành công'
+            ]);
+        } else {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Hủy đơn hàng thất bại'
+            ]);
+        } 
+        exit;
+    }
 }
