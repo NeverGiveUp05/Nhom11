@@ -55,29 +55,91 @@
                 <div class="title-section">NEW ARRIVAL</div>
                 <div class="wrap">
                     <div class="head">
-                        <ul>
-                            <?php
-                            foreach ($listDanhMuc as $key => $value) { ?>
-                                <?php if ($key == 0) { ?>
-                                    <li class='tab active'>
-                                        <?php echo $value['ten_danh_muc'] ?>
-                                    </li>
-                                <?php   } else { ?>
-                                    <li class='tab' onClick='changeDanhMuc(<?php echo $value["id"] ?>)'>
-                                        <?php echo $value['ten_danh_muc'] ?>
-                                    </li>
-                            <?php }
-                            } ?>
+                        <ul id="category-tabs">
+                            <?php foreach ($listDanhMuc as $key => $value): ?>
+                                <li class='tab <?= ($key == 0) ? "active" : "" ?>' onClick='changeDanhMuc(<?= $value["id"] ?>, this)'>
+                                    <?= $value['ten_danh_muc'] ?>
+                                </li>
+                            <?php endforeach; ?>
                         </ul>
                     </div>
 
-                    <div class="content">
+                    <script>
+                        let currentCategoryId = <?= $listDanhMuc[0]['id'] ?>;
+
+                        function changeDanhMuc(idDanhMuc, element) {
+                            if (idDanhMuc === currentCategoryId) {
+                                return;
+                            }
+
+                            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+                            element.classList.add('active');
+
+                            currentCategoryId = idDanhMuc;
+
+                            fetch(`<?= BASE_URL . '?act=get_sanpham_theo_danhmuc&id=' ?>${idDanhMuc}`)
+                                .then(res => res.json())
+                                .then(data => {
+                                    let dataHtml = '';
+                                    data.forEach(product => {
+                                        dataHtml += `
+                                            <div class="box">
+                                                <div class="cart">NEW</div>
+                                                <a class="img-container" href="?act=view-detail&id=${product.id}">
+                                                    <img class="cart-img" src="${product.hinh_anh}" alt="" />
+                                                </a>
+
+                                                <div class="detail">
+                                                    <div class="detail-head">
+                                                        <div class="list-color">
+                                                            <div class="color color-c5a782"></div>
+                                                            <div class="color color-a3784e"></div>
+                                                            <div class="color color-ec6795 checked"></div>
+                                                        </div>
+                                                        <div class="heart">
+                                                            <i class="fa-regular fa-heart"></i>
+                                                        </div> 
+                                                    </div>
+
+                                                    <div class="detail-desp">${product.ten_san_pham}</div>
+
+                                                    <div class="detail-foot">
+                                                        <div class="price">
+                                                            ${product.gia_khuyen_mai ? `<span>${product.gia_khuyen_mai}</span><del>${product.gia_san_pham}</del>`
+                                                                : `<span>${product.gia_san_pham}</span>`
+                                                            }
+                                                        </div>
+                                                        <div class="add-to-cart" onClick="addProToCart({id: ${product.id}, soluong: 1})">
+                                                            <i class="fa-solid fa-cart-shopping"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            `;
+                                    });
+
+                                    document.getElementById('product-list').innerHTML = dataHtml;
+                                });
+                        }
+
+                        // fetch('.php?id=' + idDanhMuc)
+                        //     .then(response => response.text())
+                        //     .then(data => {
+                        //         document.getElementById('product-list').innerHTML = data;
+                        //     })
+                        //     .catch(error => {
+                        //         console.error('Lỗi khi tải sản phẩm:', error);
+                        //         document.getElementById('product-list').innerHTML = '<p>Không tải được sản phẩm.</p>';
+                        //     });
+                    </script>
+
+                    <div class="content" id="product-list">
 
                         <?php
                         foreach ($listSanPham as $product) { ?>
                             <div class="box">
                                 <div class="cart">NEW</div>
-                                <a class="img-container" href="<?php echo BASE_URL . '/?act=viewDetail&detail=' . $product['id'] ?>">
+                                <a class="img-container" href="<?php echo BASE_URL . '?act=view-detail&id=' . $product['id'] ?>">
                                     <img class="cart-img" src="<?php echo $product['hinh_anh'] ?>" alt="" />
                                     <!-- <img class="pseudo-img" src="" alt="" /> -->
                                 </a>
@@ -98,10 +160,12 @@
 
                                     <div class="detail-foot">
                                         <div class="price">
-                                            <span><?= $product['gia_san_pham'] ?></span>
-                                            <?php if (isset($product['gia_khuyen_mai']) && $product['gia_khuyen_mai'] !== 0) { ?>
-                                                <del><?= $product['gia_khuyen_mai'] ?></del>
-                                            <?php   } ?>
+                                            <?php if (isset($product['gia_khuyen_mai'])) { ?>
+                                                <span><?= $product['gia_khuyen_mai'] ?></span>
+                                                <del><?= $product['gia_san_pham'] ?></del>
+                                            <?php   } else { ?>
+                                                <span><?= $product['gia_san_pham'] ?></span>
+                                            <?php } ?>
                                         </div>
                                         <div class="add-to-cart" onClick="addProToCart({id: <?php echo $product['id'] ?>, soluong: 1})">
                                             <i class="fa-solid fa-cart-shopping"></i>
@@ -190,9 +254,11 @@
                 .then((res) => res.json())
                 .then((data) => {
                     let count = 0;
-                    data.forEach((item) => {
-                        count += item.so_luong;
-                    });
+                    if (data.length > 0) {
+                        data.forEach((item) => {
+                            count += item.so_luong;
+                        });
+                    }
                     listNumberCart[0].innerText = count;
                     listNumberCart[1].innerText = count;
                 })
@@ -343,6 +409,7 @@
                     .then((data) => {
                         console.log(data);
                         getDataCart();
+                        
                     })
                     .catch((err) => console.error("Lỗi:", err));
             }

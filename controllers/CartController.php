@@ -270,7 +270,7 @@ class CartController
             $this->modelCart->clearCart($cartIdExist['id']);
         }
 
-        require_once './views/main/order.php';
+        header('Location: ./?act=order-view');
     }
 
     public function getViewOrder()
@@ -326,7 +326,7 @@ class CartController
                 'status' => 'error',
                 'message' => 'Hủy đơn hàng thất bại'
             ]);
-        } 
+        }
         exit;
     }
 }

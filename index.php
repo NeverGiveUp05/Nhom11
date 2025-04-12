@@ -22,6 +22,8 @@ $act = $_GET['act'] ?? '/';
 
 match ($act) {
     '/' => (new HomeController())->home(),
+    'get_sanpham_theo_danhmuc' => (new HomeController())->getSanPhamTheoDanhMuc(),
+    'view-detail' => (new HomeController())->viewDetail(),
 
     'add-to-cart' => (new CartController())->addToCart(),
     'get-cart' => (new CartController())->getCart(),
@@ -39,6 +41,4 @@ match ($act) {
     'handle-checkout' => (new CartController())->handleCheckout(),
     'order-view' => (new CartController())->getViewOrder(),
     'handle-huydon' => (new CartController())->handleHuyDon(),
-
-    // 'danh-sach-san-pham' => (new HomeController())->danhSachSanPham(),
 };
