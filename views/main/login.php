@@ -187,9 +187,11 @@
                 .then((res) => res.json())
                 .then((data) => {
                     let count = 0;
-                    data.forEach((item) => {
-                        count += item.so_luong;
-                    });
+                    if (data.length > 0) {
+                        data.forEach((item) => {
+                            count += item.so_luong;
+                        });
+                    }
                     listNumberCart[0].innerText = count;
                     listNumberCart[1].innerText = count;
                 })
