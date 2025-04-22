@@ -67,6 +67,6 @@ match ($act) {
     'list-tai-khoan-khach-hang' => routeAdmin(fn() => new AdminTaiKhoanController())->danhSachKhachHang(),
     'form-sua-khach-hang' => routeAdmin(fn() => new AdminTaiKhoanController())->formEditKhachHang(),
     'sua-khach-hang' => routeAdmin(fn() => new AdminTaiKhoanController())->postEditKhachHang(),
-    // 'chi-tiet-khach-hang' => (new AdminTaiKhoanController())->detailKhachHang(),
+    'chi-tiet-khach-hang' => (new AdminTaiKhoanController())->detailKhachHang(),
 
 };

@@ -38,7 +38,7 @@
             <div class="left-center">
                 <p class="title">Giới thiệu</p>
                 <ul>
-                    <li><a href="#">Về IVY moda</a></li>
+                    <li><a href="#">Về STYMART</a></li>
                     <li><a href="#">Tuyển dụng</a></li>
                     <li><a href="#">Hệ thống cửa hàng</a></li>
                 </ul>
@@ -70,7 +70,7 @@
         </div>
         <div class="right-bottom">
             <div class="register-form">
-                <div class="register-title">Nhận thông tin các chương trình của IVY moda</div>
+                <div class="register-title">Nhận thông tin các chương trình của STYLMART</div>
                 <form action="" class="form-subscribe">
                     <input type="text" placeholder="Nhập địa chỉ email" class="email-subscribe" />
                     <button class="btn-submit">Đăng ký</button>
@@ -91,7 +91,7 @@
                 </div>
 
                 <ul class="info-show">
-                    <li><a href="#">Về IVY moda</a></li>
+                    <li><a href="#">Về STYLMART</a></li>
                     <li><a href="#">Tuyển dụng</a></li>
                     <li><a href="#">Hệ thống cửa hàng</a></li>
                 </ul>
@@ -136,7 +136,7 @@
     <div class="container">
         <div class="right-bottom" id="bottom-tablet__right">
             <div class="register-form">
-                <div class="register-title">Nhận thông tin các chương trình của IVY moda</div>
+                <div class="register-title">Nhận thông tin các chương trình của STYLART</div>
                 <form action="" class="form-subscribe">
                     <input type="text" placeholder="Nhập địa chỉ email" class="email-subscribe" />
                     <button class="btn-submit">Đăng ký</button>
@@ -152,5 +152,5 @@
 </div>
 
 <footer id="footer" class="lineup">
-    <div class="copy-right">©IVYmoda All rights reserved</div>
+    <div class="copy-right">©STYLMART All rights reserved</div>
 </footer>
