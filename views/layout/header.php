@@ -1,5 +1,5 @@
 </html>
-<div id="form_900px">
+<!-- <div id="form_900px">
     <form action="" class="search-form" id="search-form" method="GET">
         <button><i class="fa-solid fa-magnifying-glass"></i></button>
         <input autocomplete="off" type="text" placeholder="TÌM KIẾM SẢN PHẨM" name="search" id="input-search_900px" />
@@ -22,7 +22,7 @@
             </div>
         </div>
     </form>
-</div>
+</div> -->
 
 <header id="header">
     <div class="container">
@@ -220,8 +220,8 @@
             <form action="" class="search-form" method="GET">
                 <button><i class="fa-solid fa-magnifying-glass"></i></button>
 
-                <input type="hidden" name="action" value="search">
-                <input id="input-search" autocomplete="off" type="text" placeholder="TÌM KIẾM SẢN PHẨM" name="value" />
+                <input type="hidden" name="act" value="search">
+                <input id="input-search" autocomplete="off" type="text" placeholder="TÌM KIẾM SẢN PHẨM" name="keyword" />
 
                 <div class="quick-search">
                     <h4>Tìm kiếm nhiều nhất</h4>
@@ -268,6 +268,7 @@
         </div>
     </div>
 
+    <!-- tablet -->
     <div class="action_tablet">
         <div id="action_search" class="action_search" href="#">
             <i class="fa-solid fa-magnifying-glass"></i>
@@ -302,7 +303,7 @@
     </div>
     <div class="main-shop" id="main-shop"></div>
     <div class="bottom-shop">
-        <div class="total-price">Tổng cộng: <strong id="total"></strong></div>
+        <div class="total-price">Tổng cộng: 0<strong id="total"></strong></div>
         <div class="box-action">
             <div onclick="checkLoginToViewCart()" class="box-title">Xem giỏ hàng</div>
         </div>

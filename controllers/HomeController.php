@@ -17,7 +17,7 @@ class HomeController
         $firstDanhMuc = $this->modelDanhMuc->getFirstDanhMuc();
         $danhMucId = $firstDanhMuc['id'] ?? null;
         if ($danhMucId) {
-            $listSanPham = $this->modelSanPham->getSanPhamByDanhMuc($danhMucId);
+            $listSanPham = $this->modelSanPham->getSanPhamByDanhMucLM5($danhMucId);
         } else {
             $listSanPham = [];
         }
@@ -29,7 +29,7 @@ class HomeController
     {
         $danhMucId = $_GET['id'] ?? null;
         if ($danhMucId) {
-            $listSanPham = $this->modelSanPham->getSanPhamByDanhMuc($danhMucId);
+            $listSanPham = $this->modelSanPham->getSanPhamByDanhMucLM5($danhMucId);
             echo json_encode($listSanPham);
         } else {
             echo json_encode([]);
@@ -50,6 +50,60 @@ class HomeController
         } else {
             header('Location: ./');
             exit;
+        }
+    }
+
+    public function category()
+    {
+        $listDanhMuc = $this->modelDanhMuc->getAllDanhMuc();
+        $danhMucId = $_GET['id'] ?? null;
+        if ($danhMucId) {
+            $listSanPham = $this->modelSanPham->getSanPhamByDanhMuc($danhMucId);
+        } else {
+            $listSanPham = [];
+        }
+        require_once './views/main/category.php';
+    }
+
+    public function sort()
+    {
+        $sortby = isset($_GET['by']) ? $_GET['by'] : 'default';
+
+        $listSanPham = $this->modelSanPham->sortSanPham($_GET['id'], $sortby);
+
+        if ($listSanPham) {
+            echo json_encode($listSanPham);
+        } else {
+            echo json_encode([]);
+        }
+    }
+
+    public function search()
+    {
+        $listDanhMuc = $this->modelDanhMuc->getAllDanhMuc();
+
+        $keyword = $_GET['keyword'] ?? null;
+        if ($keyword) {
+            $listSanPham = $this->modelSanPham->searchSanPham($keyword);
+        } else {
+            $listSanPham = [];
+        }
+
+        require_once './views/main/search.php';
+    }
+
+    public function sortByKeyword()
+    {
+        $keyword = $_GET['keyword'] ?? null;
+        $sortby = isset($_GET['by']) ? $_GET['by'] : 'default';
+
+        // echo json_encode([$keyword, $sortby]);
+
+        if ($keyword) {
+            $listSanPham = $this->modelSanPham->sortSanPhamByKeyword($keyword, $sortby);
+            echo json_encode($listSanPham);
+        } else {
+            echo json_encode([]);
         }
     }
 }

@@ -32,6 +32,18 @@ class SanPham
         }
     }
 
+    public function getSanPhamByDanhMucLM5($danhMucId)
+    {
+        try {
+            $sql = "SELECT * FROM san_phams WHERE danh_muc_id = :danh_muc_id AND trang_thai = 1 ORDER BY id DESC LIMIT 5";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([':danh_muc_id' => $danhMucId]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+
     public function getSanPhamById($sanPhamId)
     {
         try {
@@ -68,6 +80,58 @@ class SanPham
             $sql = "UPDATE san_phams SET so_luong = :so_luong WHERE id = :id";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute([':so_luong' => $soLuong, ':id' => $sanPhamId]);
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+
+    public function sortSanPham($idDanhMuc, $sortby)
+    {
+        try {
+            if ($sortby === 'name_asc' || $sortby === 'name_desc') {
+                $orderBy = 'ORDER BY ten_san_pham ' . ($sortby === 'name_asc' ? 'ASC' : 'DESC');
+            } elseif ($sortby === 'price_asc' || $sortby === 'price_desc') {
+                $orderBy = 'ORDER BY COALESCE(gia_khuyen_mai, gia_san_pham) ' . ($sortby === 'price_asc' ? 'ASC' : 'DESC');
+            } else {
+                $orderBy = '';
+            }
+
+            $sql = "SELECT * FROM san_phams WHERE danh_muc_id = :id AND trang_thai = 1 $orderBy";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([':id' => $idDanhMuc]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+
+    public function searchSanPham($keyword)
+    {
+        try {
+            $sql = "SELECT * FROM san_phams WHERE ten_san_pham LIKE :keyword AND trang_thai = 1";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([':keyword' => '%' . trim($keyword) . '%']);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+
+    public function sortSanPhamByKeyword($keyword, $sortby)
+    {
+        try {
+            if ($sortby === 'name_asc' || $sortby === 'name_desc') {
+                $orderBy = 'ORDER BY ten_san_pham ' . ($sortby === 'name_asc' ? 'ASC' : 'DESC');
+            } elseif ($sortby === 'price_asc' || $sortby === 'price_desc') {
+                $orderBy = 'ORDER BY COALESCE(gia_khuyen_mai, gia_san_pham) ' . ($sortby === 'price_asc' ? 'ASC' : 'DESC');
+            } else {
+                $orderBy = '';
+            }
+
+            $sql = "SELECT * FROM san_phams WHERE ten_san_pham LIKE :keyword AND trang_thai = 1 " . $orderBy;
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([':keyword' => '%' . trim($keyword) . '%']);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
         }

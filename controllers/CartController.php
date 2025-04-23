@@ -64,10 +64,7 @@ class CartController
         $userId = $_SESSION['user']['id'] ?? '';
 
         if (!$userId) {
-            echo json_encode([
-                'status' => 'error',
-                'message' => 'Vui lòng đăng nhập'
-            ]);
+            echo json_encode([]);
             exit;
         }
 

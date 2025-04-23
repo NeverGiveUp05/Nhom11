@@ -51,8 +51,7 @@ function deleteSessionError()
 {
     if (isset($_SESSION['flash'])) {
         unset($_SESSION['flash']);
-        session_unset();
-        session_destroy();
+        unset($_SESSION['errors']);
     }
 }
 // format date
@@ -60,6 +59,16 @@ function formatDate($date)
 {
     return date("d-m-Y", strtotime($date));
 }
+
+function formatDateDB($date)
+{
+    $timestamp = strtotime($date);
+    if ($timestamp === false) {
+        return null;
+    }
+    return date("Y-m-d", $timestamp);
+}
+
 
 function generateOrderCode($prefix = 'STYLMART')
 {

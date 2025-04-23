@@ -119,18 +119,9 @@
                                     });
 
                                     document.getElementById('product-list').innerHTML = dataHtml;
+                                    document.getElementById("more-pro").href = `<?= BASE_URL . '?act=category&id=' ?>${idDanhMuc}`;
                                 });
                         }
-
-                        // fetch('.php?id=' + idDanhMuc)
-                        //     .then(response => response.text())
-                        //     .then(data => {
-                        //         document.getElementById('product-list').innerHTML = data;
-                        //     })
-                        //     .catch(error => {
-                        //         console.error('Lỗi khi tải sản phẩm:', error);
-                        //         document.getElementById('product-list').innerHTML = '<p>Không tải được sản phẩm.</p>';
-                        //     });
                     </script>
 
                     <div class="content" id="product-list">
@@ -178,12 +169,7 @@
 
                     </div>
                     <div class="show-all">
-                        <a href="<?php echo '?act=category&list=';
-                                    if (isset($_GET['list'])) {
-                                        echo $_GET['list'];
-                                    } else {
-                                        echo $ds[0]['id'];
-                                    } ?>" id="more-pro" class="show-text">Xem thêm</a>
+                        <a href="<?php echo BASE_URL . '?act=category&id=' . $listDanhMuc[0]['id'] ?>" id="more-pro" class="show-text">Xem thêm</a>
                     </div>
                 </div>
             </section>
@@ -281,33 +267,22 @@
 
             if (arrPro.length == 0) {
                 main.innerText = "Bạn chưa có sản phẩm nào";
-            }
+            } else {
+                let fetchPromises = arrPro.map((item) =>
+                    fetch("<?= BASE_URL ?>?act=get-product-by-id&id=" + item.san_pham_id)
+                    .then((res) => res.json())
+                    .then((data) => ({
+                        data,
+                        item
+                    }))
+                );
 
-            countPro();
-
-            // let totalPrice = 0;
-            // arrPro.forEach(({
-            //     item
-            // }) => {
-            //     totalPrice += item.gia_san_pham * item.so_luong;
-            // });
-            // total.innerText = totalPrice;
-
-            let fetchPromises = arrPro.map((item) =>
-                fetch("<?= BASE_URL ?>?act=get-product-by-id&id=" + item.san_pham_id)
-                .then((res) => res.json())
-                .then((data) => ({
-                    data,
-                    item
-                }))
-            );
-
-            Promise.all(fetchPromises).then((results) => {
-                results.forEach(({
-                    data,
-                    item
-                }) => {
-                    main.innerHTML += `
+                Promise.all(fetchPromises).then((results) => {
+                    results.forEach(({
+                        data,
+                        item
+                    }) => {
+                        main.innerHTML += `
                 <div class="item-product">
                     <div class="thumb"><img src="${data.hinh_anh}" alt="" /></div>
                     <div class="container-flex">
@@ -334,8 +309,19 @@
                     </div>
                 </div>
             `;
-                });
-            }).catch((err) => console.error("Lỗi:", err));
+                    });
+                }).catch((err) => console.error("Lỗi:", err));
+            }
+
+            countPro();
+
+            // let totalPrice = 0;
+            // arrPro.forEach(({
+            //     item
+            // }) => {
+            //     totalPrice += item.gia_san_pham * item.so_luong;
+            // });
+            // total.innerText = totalPrice;
         };
 
         function getDataCart() {
@@ -409,7 +395,7 @@
                     .then((data) => {
                         console.log(data);
                         getDataCart();
-                        
+
                     })
                     .catch((err) => console.error("Lỗi:", err));
             }

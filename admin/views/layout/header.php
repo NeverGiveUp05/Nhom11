@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="./assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="./assets/dist/css/adminlte.min.css">
+    <script src="https://kit.fontawesome.com/18ea624bf8.js" crossorigin="anonymous"></script>
 </head>
 
 <body class="hold-transition sidebar-mini">

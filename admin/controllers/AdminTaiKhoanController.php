@@ -12,14 +12,14 @@ class AdminTaiKhoanController
     public function danhSachQuanTri()
     {
         $listQuanTri = $this->modelTaiKhoan->getAllTaiKhoan(2);
-        
+
         require_once './views/taikhoan/quantri/listQuanTri.php';
     }
     public function formAddQuanTri()
     {
         require_once './views/taikhoan/quantri/addQuanTri.php';
 
-         deleteSessionError();
+        deleteSessionError();
     }
     public function postAddQuanTri()
     {
@@ -42,7 +42,7 @@ class AdminTaiKhoanController
             if (empty($errors)) {
 
                 // đặt password mặc định - 123@123ab
-                $password = password_hash('123@123ab', PASSWORD_BCRYPT);
+                $password = password_hash('123@123ab', PASSWORD_DEFAULT);
                 // var_dump($password);die();
 
                 // Khai báo chức vụ
@@ -113,7 +113,7 @@ class AdminTaiKhoanController
                     $gioi_tinh,
                     $so_dien_thoai,
                     $trang_thai
-                    
+
                 );
                 // var_dump($abc);die;
 
@@ -131,17 +131,16 @@ class AdminTaiKhoanController
         $tai_khoan_id = $_GET['id_quan_tri'];
         $tai_Khoan = $this->modelTaiKhoan->getDetailTaiKhoan($tai_khoan_id);
         // đặt password mặc định - 123@123ab
-        $password = password_hash('123@123ab', PASSWORD_BCRYPT);
+        $password = password_hash('123@123ab', PASSWORD_DEFAULT);
 
         $status = $this->modelTaiKhoan->resetPassword($tai_khoan_id, $password);
         if ($status && $tai_Khoan['chuc_vu_id'] == 1) {
             header("Location: " . BASE_URL_ADMIN . "?act=list-tai-khoan-quan-tri");
             exit();
-        }elseif($status && $tai_Khoan['chuc_vu_id'] == 2){
+        } elseif ($status && $tai_Khoan['chuc_vu_id'] == 2) {
             header("Location: " . BASE_URL_ADMIN . "?act=list-tai-khoan-khach-hang");
             exit();
-        }
-        else {
+        } else {
             var_dump('Lỗi khi reset tài khoản');
             die();
         }
@@ -211,7 +210,7 @@ class AdminTaiKhoanController
                     $dia_chi,
                     $so_dien_thoai,
                     $trang_thai
-                );   
+                );
                 // var_dump($abc);die;
 
                 header('Location: ' . BASE_URL_ADMIN . '?act=list-tai-khoan-khach-hang');

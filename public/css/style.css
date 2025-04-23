@@ -1437,6 +1437,10 @@ input::-webkit-inner-spin-button {
     display: none;
 }
 
+.shop-categories li a.active {
+    color: #c29958;
+}
+
 @media screen and (max-width: 1400px) {
     .container {
         width: calc(100% - 40px) !important;

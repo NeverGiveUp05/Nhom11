@@ -29,7 +29,9 @@ class AdminSanPhamController
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $ten_san_pham = $_POST['ten_san_pham'] ?? '';
             $gia_san_pham = $_POST['gia_san_pham'] ?? '';
-            $gia_khuyen_mai = $_POST['gia_khuyen_mai'] ?? '';
+            $gia_khuyen_mai = isset($_POST['gia_khuyen_mai']) && $_POST['gia_khuyen_mai'] !== ''
+                ? $_POST['gia_khuyen_mai']
+                : null;
             $so_luong = $_POST['so_luong'] ?? '';
             $ngay_nhap = $_POST['ngay_nhap'] ?? '';
             $danh_muc_id = $_POST['danh_muc_id'] ?? '';
@@ -52,20 +54,12 @@ class AdminSanPhamController
                 $errors['gia_san_pham'] = 'Giá sản phẩm không được để trống';
             }
 
-            if (empty($gia_khuyen_mai)) {
-                $errors['gia_khuyen_mai'] = 'Giá khuyến mãi sản phẩm không được để trống';
-            }
-
             if (empty($so_luong)) {
                 $errors['so_luong'] = 'Số lượng sản phẩm không được để trống';
             }
 
             if (empty($ngay_nhap)) {
                 $errors['ngay_nhap'] = 'Ngày nhập phẩm không được để trống';
-            }
-
-            if (empty($so_luong)) {
-                $errors['so_luong'] = 'Số lượng sản phẩm không được để trống';
             }
 
             if (empty($danh_muc_id)) {
