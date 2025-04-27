@@ -244,7 +244,15 @@
             </form>
 
             <div class="header-action">
-                <div class="item action_pc"><i class="fa-solid fa-headphones"></i></div>
+                <div class="item action_pc">
+                    <?php if (isset($_SESSION['user'])) { ?>
+                        <a style="color: #373737ef;" href="<?php echo BASE_URL . '?act=order-view'; ?>">
+                            <i class="fa-solid fa-file-invoice-dollar"></i>
+                        </a>
+                    <?php } else { ?>
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                    <?php } ?>
+                </div>
 
                 <?php
                 if (isset($_SESSION['user'])) { ?>
@@ -303,7 +311,7 @@
     </div>
     <div class="main-shop" id="main-shop"></div>
     <div class="bottom-shop">
-        <div class="total-price">Tổng cộng: 0<strong id="total"></strong></div>
+        <div class="total-price">Tổng cộng: <strong id="total"></strong></div>
         <div class="box-action">
             <div onclick="checkLoginToViewCart()" class="box-title">Xem giỏ hàng</div>
         </div>

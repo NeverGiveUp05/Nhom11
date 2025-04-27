@@ -119,9 +119,18 @@ class Cart
         }
     }
 
-    public function removeFromCart($productId)
+    public function removeFromCart($cartId, $sanPhamId)
     {
-        // Logic to remove product from cart
+        try {
+            $sql = "DELETE FROM chi_tiet_gio_hangs WHERE gio_hang_id = :cart_id AND san_pham_id = :product_id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([
+                ':cart_id' => $cartId,
+                ':product_id' => $sanPhamId
+            ]);
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
     }
 
     public function clearCart($cartId)
@@ -224,6 +233,26 @@ class Cart
             return $donHang;
         } catch (PDOException $e) {
             return ['error' => $e->getMessage()];
+        }
+    }
+
+    public function getDonHangChiTietById($donHangId)
+    {
+        try {
+            $sql = "
+                SELECT don_hangs.*, chi_tiet_don_hangs.*, san_phams.*, trang_thai_don_hangs.ten_trang_thai, phuong_thuc_thanh_toans.ten_phuong_thuc
+                FROM don_hangs
+                JOIN chi_tiet_don_hangs ON don_hangs.id = chi_tiet_don_hangs.don_hang_id
+                JOIN san_phams ON chi_tiet_don_hangs.san_pham_id = san_phams.id
+                JOIN trang_thai_don_hangs ON don_hangs.trang_thai_id = trang_thai_don_hangs.id
+                JOIN phuong_thuc_thanh_toans ON don_hangs.phuong_thuc_thanh_toan_id = phuong_thuc_thanh_toans.id
+                WHERE don_hangs.id = :don_hang_id
+            ";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([':don_hang_id' => $donHangId]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
         }
     }
 }

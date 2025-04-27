@@ -138,15 +138,24 @@ class AdminSanPham
         }
     }
 
-    // public function destroyDanhMuc($id)
-    // {
-    //     try {
-    //         $sql = "DELETE FROM danh_mucs WHERE id = :id";
-    //         $stmt = $this->conn->prepare($sql);
-    //         $stmt->execute([':id' => $id]);
-    //         return true;
-    //     } catch (PDOException $e) {
-    //         echo "Error: " . $e->getMessage();
-    //     }
-    // }
+    public function deleteSanPhamById($id)
+    {
+        try {
+            $sql = "DELETE FROM hinh_anh_san_phams WHERE san_pham_id = :id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([':id' => $id]);
+
+            $sql = "DELETE FROM san_phams WHERE id = :id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([':id' => $id]);
+
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
 }

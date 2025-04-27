@@ -142,6 +142,26 @@ class CartController
         exit;
     }
 
+    public function removeProduct()
+    {
+        header('Content-Type: application/json');
+
+        $raw = file_get_contents("php://input");
+        $data = json_decode($raw, true);
+
+        $sanPhamId = $data['id'];
+        $cartId = $data['cartId'];
+
+        if (!$sanPhamId) {
+            echo json_encode(['status' => 'error', 'message' => 'Sản phẩm không tồn tại']);
+            exit;
+        }
+
+        $this->modelCart->removeFromCart($cartId, $sanPhamId);
+        echo json_encode(['message' => 'Xóa sản phẩm thành công']);
+        exit;
+    }
+
     public function getCartPage()
     {
         $userId = $_SESSION['user']['id'] ?? '';
@@ -325,5 +345,30 @@ class CartController
             ]);
         }
         exit;
+    }
+
+    public function getOrderDetail()
+    {
+        $userId = $_SESSION['user']['id'] ?? '';
+
+        if (!$userId) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Hãy đăng nhập để thực hiện chức năng này'
+            ]);
+            exit;
+        }
+
+        $donHangId = $_GET['id'] ?? null;
+        if (!$donHangId) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Đơn hàng không tồn tại'
+            ]);
+            exit;
+        }
+
+        $donHang = $this->modelCart->getDonHangChiTietById($donHangId);
+        require_once './views/main/order-detail.php';
     }
 }

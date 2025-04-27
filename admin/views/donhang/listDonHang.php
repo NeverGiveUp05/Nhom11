@@ -60,7 +60,7 @@
                             <button class="btn btn-primary"><i id="togglePassword" class="fas fa-eye" style="cursor: pointer;"></i></button>
                           </a>
                           <a href=" <?= BASE_URL_ADMIN . '?act=form-sua-don-hang&id_don_hang=' . $donHang['id'] ?>">
-                            <button class="btn btn-warning"><i class="fas fa-cog fa-spin"></i></button>
+                            <button class="btn btn-warning"><i class="fas fa-cog"></i></button>
                           </a>
                         </td>
                       </tr>

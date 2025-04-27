@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>StylMart</title>
+    <link rel="shortcut icon" href="./public/images/favicon.png" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,900" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="assets/css/vendor/bootstrap.min.css">
@@ -194,20 +195,16 @@
 
         countPro();
 
-        function openShop() {
-            shopping.classList.add("open");
-            getDataCart();
-        };
+        function openShop() {};
 
-        const closeShop = () => {
-            shopping.classList.remove("open");
-        };
+        const closeShop = () => {};
 
         const makeShop = () => {
             main.innerHTML = "";
 
             if (arrPro.length == 0) {
                 main.innerText = "Bạn chưa có sản phẩm nào";
+                total.innerText = 0;
             }
 
             countPro();
@@ -230,10 +227,18 @@
             );
 
             Promise.all(fetchPromises).then((results) => {
+                let totalPrice = 0;
+
                 results.forEach(({
                     data,
                     item
                 }) => {
+                    if (data.gia_khuyen_mai) {
+                        data.gia_san_pham = data.gia_khuyen_mai;
+                    }
+
+                    totalPrice += data.gia_san_pham * item.so_luong;
+
                     main.innerHTML += `
                 <div class="item-product">
                     <div class="thumb"><img src="${data.hinh_anh}" alt="" /></div>
@@ -241,7 +246,7 @@
                         <div class="info-product">
                             <h3 id="product-name">${data.ten_san_pham}</h3>
                         </div>
-                        <div class="trash" onClick="removePro(${data.id})">
+                        <div class="trash" onClick="removePro(${data.id}, ${item.gio_hang_id})">
                             <i class="fa-solid fa-trash-can"></i>
                         </div>
                         <div class="item-bottom">
@@ -262,6 +267,8 @@
                 </div>
             `;
                 });
+
+                total.innerText = totalPrice;
             }).catch((err) => console.error("Lỗi:", err));
         };
 
@@ -273,28 +280,6 @@
                     makeShop();
                 })
                 .catch((err) => console.error("Lỗi:", err));
-        }
-
-        function reduce(cartId, proId, soLuong) {
-            if (soLuong > 1) {
-                fetch("<?= BASE_URL ?>?act=reduce-quantity", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            id: proId,
-                            cartId: cartId,
-                            soLuongGiam: 1
-                        })
-                    })
-                    .then((res) => res.json())
-                    .then((data) => {
-                        console.log(data);
-                        getDataCart();
-                    })
-                    .catch((err) => console.error("Lỗi:", err));
-            }
         }
 
         function reduce(cartId, proId, soLuong) {
@@ -339,6 +324,24 @@
                     })
                     .catch((err) => console.error("Lỗi:", err));
             }
+        }
+
+        function removePro(id, cartId) {
+            fetch("<?= BASE_URL ?>?act=remove-product", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        id: id,
+                        cartId: cartId
+                    })
+                })
+                .then((res) => res.json())
+                .then((data) => {
+                    getDataCart();
+                })
+                .catch((err) => console.error("Lỗi:", err));
         }
     </script>
 </body>

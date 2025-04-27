@@ -32,7 +32,7 @@
                         </div>
 
                         <form action="<?= BASE_URL_ADMIN . '?act=sua-quan-tri' ?>" method="POST">
-                            <input type="text" class="hidden" name="quan_tri_id" value="<?= $quanTri['id'] ?>">
+                            <input type="hidden" name="quan_tri_id" value="<?= $quanTri['id'] ?>">
                             <div class="card-body">
                                 <div class="form-group">
                                     <label>Họ tên</label>

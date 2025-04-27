@@ -56,12 +56,12 @@
                                             <td><?= $quanTri['trang_thai'] == 1 ? 'Active' : 'Inactive' ?></td>
                                             <td>
                                                 <a href="<?= BASE_URL_ADMIN . '?act=form-sua-quan-tri&id_quan_tri=' . $quanTri['id'] ?>">
-                                                    <button class="btn btn-warning"><i class="fas fa-cog fa-spin"></i></button>
+                                                    <button class="btn btn-warning"><i class="fas fa-cog"></i></button>
                                                 </a>
                                                 <a href="<?= BASE_URL_ADMIN . '?act=reset-password&id_quan_tri=' . $quanTri['id'] ?>"
                                                     onclick="return confirm('Bạn có muốn reset password của tài khoản này không?')">
                                                     <button class="btn btn-danger">
-                                                        <i class="fas fa-sync-alt fa-spin"></i> <!-- icon reset phổ biến -->
+                                                        <i class="fas fa-sync-alt"></i>
                                                     </button>
                                                 </a>
                                             </td>

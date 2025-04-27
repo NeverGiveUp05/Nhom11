@@ -32,7 +32,7 @@
                         </div>
 
                         <form action="<?= BASE_URL_ADMIN . '?act=sua-khach-hang' ?>" method="POST">
-                            <input type="text" class="hidden" name="khach_hang_id" value="<?= $khachHang['id'] ?>">
+                            <input type="hidden" name="khach_hang_id" value="<?= $khachHang['id'] ?>">
                             <div class="card-body">
                                 <div class="form-group">
                                     <label>Họ tên</label>

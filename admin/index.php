@@ -43,7 +43,7 @@ match ($act) {
     'form-sua-san-pham' => routeAdmin(fn() => new AdminSanPhamController())->formEditSanPham(),
     'sua-san-pham' => routeAdmin(fn() => new AdminSanPhamController())->postEditSanPham(),
     // 'sua-album-anh-san-pham' => (new AdminSanPhamController())->postEditAnhSanPham(),
-    // 'xoa-san-pham' => (new AdminSanPhamController())->deleteSanPham(),
+    'xoa-san-pham' => routeAdmin(fn() => new AdminSanPhamController())->deleteSanPham(),
 
     //Route quản lí đơn hàng
     'don-hang' => routeAdmin(fn() => new AdminDonHangController())->danhSachDonHang(),

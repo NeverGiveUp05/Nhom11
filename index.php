@@ -34,6 +34,7 @@ match ($act) {
     'get-product-by-id' => (new CartController())->getProductById(),
     'reduce-quantity' => (new CartController())->reduceQuantity(),
     'increase-quantity' => (new CartController())->increaseQuantity(),
+    'remove-product' => (new CartController())->removeProduct(),
 
     'cart' => (new CartController())->getCartPage(),
 
@@ -46,5 +47,6 @@ match ($act) {
     'checkout' => (new CartController())->checkout(),
     'handle-checkout' => (new CartController())->handleCheckout(),
     'order-view' => (new CartController())->getViewOrder(),
+    'order-detail' => (new CartController())->getOrderDetail(),
     'handle-huydon' => (new CartController())->handleHuyDon(),
 };

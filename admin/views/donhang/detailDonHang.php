@@ -17,20 +17,6 @@
                 <div class="col-sm-12">
                     <h1>Quản lý danh sách đơn hàng - Đơn hàng <?= $donHang['ma_don_hang'] ?></h1>
                 </div>
-                <div class="col-sm-2">
-                    <form action="" method="post">
-                        <select name="" id="" class="form-group">
-                            <?php foreach ($listTrangThaiDonHang as $key => $trangThai): ?>
-                                <option
-                                    <?= $trangThai['id'] == $donHang['trang_thai_id'] ? 'selected' : '' ?>
-                                    <?= $trangThai['id'] < $donHang['trang_thai_id'] ? 'disabled' : '' ?>
-                                    value="<?= $trangThai['id'] ?>">
-                                    <?= $trangThai['ten_trang_thai']; ?>
-                                </option>
-                            <?php endforeach ?>
-                        </select>
-                    </form>
-                </div>
             </div>
         </div><!-- /.container-fluid -->
     </section>

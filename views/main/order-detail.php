@@ -24,39 +24,113 @@
 
     <main id="main">
         <section class="container mt-3 mb-5">
-            <h2 class="text-center mb-3">Danh sách đơn hàng</h2>
-            <table class="table table-striped table-bordered table-sm">
-                <thead>
-                    <tr>
-                        <th scope="col">Mã đơn hàng</th>
-                        <th scope="col">Ngày đặt</th>
-                        <th scope="col">Trạng thái</th>
-                        <th scope="col">Tổng tiền</th>
-                        <th scope="col">Hành động</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($donHang as $item): ?>
-                        <tr>
-                            <th><?= $item['ma_don_hang'] ?></th>
-                            <td><?= $item['ngay_dat'] ?></td>
-                            <td><?= $item['ten_trang_thai'] ?></td>
-                            <td><?= $item['tong_tien'] ?></td>
-                            <td>
-                                <a href="<?= BASE_URL ?>?act=order-detail&id=<?= $item['id'] ?>" class="btn btn-sm btn-primary">
-                                    Chi tiết
-                                </a>
+            <div class="content-wrapper">
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-sm-12">
+                                <h2>Đơn hàng: <?= $donHang[0]['ma_don_hang'] ?></h2>
+                            </div>
+                        </div>
+                    </div><!-- /.container-fluid -->
+                </section>
 
-                                <button class="btn btn-sm btn-danger"
-                                    onclick="huyDon(<?= $item['id'] ?>)"
-                                    <?= ($item['trang_thai_id'] == 9 || $item['trang_thai_id'] == 10 || $item['trang_thai_id'] == 11) ? 'disabled' : '' ?>>
-                                    Hủy đơn
-                                </button>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                <!-- Main content -->
+                <section class="content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12">
+                                <?php
+                                if ($donHang[0]['trang_thai_id'] == 1) {
+                                    $colorAlerts = 'primary';
+                                } elseif ($donHang[0]['trang_thai_id'] >= 2 && $donHang[0]['trang_thai_id'] <= 9) {
+                                    $colorAlerts = 'warning';
+                                } elseif ($donHang[0]['trang_thai_id'] == 10) {
+                                    $colorAlerts = 'success';
+                                } else {
+                                    $colorAlerts = 'danger';
+                                }
+                                ?>
+
+                                <div class="alert alert-<?= $colorAlerts; ?>" role="alert">
+                                    Trạng thái đơn hàng: <?= $donHang[0]['ten_trang_thai'] ?>
+                                </div>
+                                <!-- Main content -->
+                                <div class="invoice p-3 mb-3">
+                                    <!-- title row -->
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h4>
+                                                <i class="fas fa-globe"></i> Shop Thời trang & Phụ kiện STYLMART
+                                                <small class="float-right">Đơn hàng: <?= formatDate($donHang[0]['ngay_dat']) ?></small>
+                                            </h4>
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                    <!-- info row -->
+                                    <div class="row invoice-info my-3">
+                                        <!-- /.col -->
+                                        <div class="col-sm-6 invoice-col">
+                                            <b>Người nhận:</b> <?= $donHang[0]['ten_nguoi_nhan'] ?>
+                                            <address>
+                                                <b>Email:</b> <?= $donHang[0]['email_nguoi_nhan'] ?><br>
+                                                <b>Số điện thoại:</b> <?= $donHang[0]['sdt_nguoi_nhan'] ?><br>
+                                                <b>Địa chỉ:</b> <?= $donHang[0]['dia_chi_nguoi_nhan'] ?><br>
+                                            </address>
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-sm-6 invoice-col">
+                                            <b>Mã đơn hàng:</b> <?= $donHang[0]['ma_don_hang']; ?><br>
+                                            <b>Tổng tiền:</b> <?= $donHang[0]['tong_tien']; ?><br>
+                                            <b>Ghi Chú:</b> <?= $donHang[0]['ghi_chu']; ?><br>
+                                            <b>Thanh Toán:</b> <?= $donHang[0]['ten_phuong_thuc']; ?>
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                    <!-- /.row -->
+
+                                    <!-- Table row -->
+                                    <div class="row">
+                                        <div class="col-12 table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Tên sản phẩm</th>
+                                                        <th>Đơn giá </th>
+                                                        <th>Số lượng</th>
+                                                        <th>Thành tiền</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php $tong_tien = 0; ?>
+                                                    <?php foreach ($donHang as $key => $sanPham): ?>
+                                                        <tr>
+                                                            <td><?= $key + 1 ?></td>
+                                                            <td><?= $sanPham['ten_san_pham'] ?></td>
+                                                            <td><?= $sanPham['don_gia'] ?></td>
+                                                            <td><?= $sanPham['san_pham_id'] ?></td>
+                                                            <td><?= $sanPham['thanh_tien'] ?></td>
+                                                        </tr>
+                                                        <?php $tong_tien += $sanPham['thanh_tien']; ?>
+                                                    <?php endforeach; ?>
+                                                    <tr>
+                                                        <td colspan="4" class="text-right"><strong>Tổng tiền:</strong></td>
+                                                        <td><strong><?= $tong_tien ?></strong></td>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                </div>
+                                <!-- /.invoice -->
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                    </div><!-- /.container-fluid -->
+                </section>
+                <!-- /.content -->
+            </div>
         </section>
     </main>
 

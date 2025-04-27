@@ -3,10 +3,21 @@
 <!-- Navbar -->
 <?php include './views/layout/navbar.php' ?>
 <!-- /.navbar -->
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- Main Sidebar Container -->
 <?php include './views/layout/sidebar.php' ?>
 
+<?php if (isset($_SESSION['errorDelete'])): ?>
+  <script>
+    Swal.fire({
+      title: 'Error!',
+      text: '<?php echo $_SESSION['errorDelete']; ?>',
+      icon: 'error',
+      confirmButtonText: 'Xác nhận'
+    });
+  </script>
+  <?php unset($_SESSION['errorDelete']); ?>
+<?php endif; ?>
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
